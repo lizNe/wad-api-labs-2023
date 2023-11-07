@@ -1,2 +1,3 @@
-# wad-api-labs-2023
-This lab is about Node.js
+# Web App Dev 2: Web API Labs
+
+Practical labs for the WAD2 module
