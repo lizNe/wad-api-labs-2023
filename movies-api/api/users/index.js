@@ -1,7 +1,9 @@
 import express from 'express';
 import User from './userModel';
+import jwt from 'jsonwebtoken';
 
 const router = express.Router();
+
 
 // Get all users
 router.get('/', async (req, res) => {
@@ -11,28 +13,19 @@ router.get('/', async (req, res) => {
 
 // Register(Create)/Authenticate User
 router.post('/', async (req, res) => {
-  if (req.query.action === 'register') {
-    try {
-      // Validate and save the user to the database
-      const newUser = await User(req.body).save();
-      res.status(201).json({ code: 201, msg: 'Successfully created new user.', user: newUser });
-    } catch (error) {
-      // Handle validation error
-      if (error.name === 'ValidationError') {
-        const errorMessage = Object.values(error.errors)[0].message;
-        res.status(400).json({ code: 400, msg: errorMessage });
-      } else {
-        res.status(500).json({ code: 500, msg: 'Internal Server Error' });
+  try {
+      if (!req.body.username || !req.body.password) {
+          return res.status(400).json({ success: false, msg: 'Username and password are required.' });
       }
-    }
-  } else {
-    // Must be an authentication attempt
-    const user = await User.findOne(req.body);
-    if (!user) {
-      return res.status(401).json({ code: 401, msg: 'Authentication failed' });
-    } else {
-      return res.status(200).json({ code: 200, msg: 'Authentication Successful', token: 'TEMPORARY_TOKEN' });
-    }
+      if (req.query.action === 'register') {
+          await registerUser(req, res);
+      } else {
+          await authenticateUser(req, res);
+      }
+  } catch (error) {
+      // Log the error and return a generic error message
+      console.error(error);
+      res.status(500).json({ success: false, msg: 'Internal server error.' });
   }
 });
 
@@ -48,5 +41,28 @@ router.put('/:id', async (req, res) => {
     res.status(404).json({ code: 404, msg: 'Unable to Update User' });
   }
 });
+
+
+async function registerUser(req, res) {
+  // Add input validation logic here
+  await User.create(req.body);
+  res.status(201).json({ success: true, msg: 'User successfully created.' });
+}
+
+async function authenticateUser(req, res) {
+  const user = await User.findByUserName(req.body.username);
+  if (!user) {
+      return res.status(401).json({ success: false, msg: 'Authentication failed. User not found.' });
+  }
+
+  const isMatch = await user.comparePassword(req.body.password);
+  if (isMatch) {
+      const token = jwt.sign({ username: user.username }, process.env.SECRET);
+      res.status(200).json({ success: true, token: 'BEARER ' + token });
+  } else {
+      res.status(401).json({ success: false, msg: 'Wrong password.' });
+  }
+}
+
 
 export default router;
