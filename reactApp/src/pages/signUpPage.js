@@ -1,52 +1,45 @@
 import React, { useContext, useState } from "react";
-import { Navigate, Link, useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { AuthContext } from '../contexts/authContext';
 
-const SignUpPage = () => {
-    const context = useContext(AuthContext);
+const SignUpPage = props => {
+  const context = useContext(AuthContext)
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordAgain, setPasswordAgain] = useState("");
+  const [registered, setRegistered] = useState(false);
 
-    const [userName, setUserName] = useState("");
-    const [password, setPassword] = useState("");
+  const register = () => {
+    let passwordRegEx = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+    const validPassword = passwordRegEx.test(password);
 
-    const signUp = () => {
-        // Assuming you have a function in your context for handling signup
-        context.signUp(userName, password);
-    };
-
-    let location = useLocation();
-
-    // Set 'from' to path where the browser is redirected after a successful signup
-    const { from } = location.state ? { from: location.state.from.pathname } : { from: "/" };
-
-    if (context.isAuthenticated === true) {
-        return <Navigate to={from} />;
+    if (validPassword && password === passwordAgain) {
+      context.register(userName, password);
+      setRegistered(true);
     }
+  }
 
-    return (
-        <>
-            <h2>Sign Up page</h2>
-            <p>Create a new account to access the protected pages</p>
-            <input
-                id="username"
-                placeholder="Username"
-                onChange={(e) => {
-                    setUserName(e.target.value);
-                }}
-            /><br />
-            <input
-                id="password"
-                type="password"
-                placeholder="Password"
-                onChange={(e) => {
-                    setPassword(e.target.value);
-                }}
-            /><br />
-            {/* Signup web form */}
-            <button onClick={signUp}>Sign Up</button>
-            <p>Already have an account?
-                <Link to="/login">Log In!</Link></p>
-        </>
-    );
+  if (registered === true) {
+    return <Navigate to="/login" />;
+  }
+
+  return (
+    <>
+      <h2>SignUp page</h2>
+      <p>You must register a username and password to log in </p>
+      <input value={userName} placeholder="user name" onChange={e => {
+        setUserName(e.target.value);
+      }}></input><br />
+      <input value={password} type="password" placeholder="password" onChange={e => {
+        setPassword(e.target.value);
+      }}></input><br />
+      <input value={passwordAgain} type="password" placeholder="password again" onChange={e => {
+        setPasswordAgain(e.target.value);
+      }}></input><br />
+      {/* Login web form  */}
+      <button onClick={register}>Register</button>
+    </>
+  );
 };
 
 export default SignUpPage;
