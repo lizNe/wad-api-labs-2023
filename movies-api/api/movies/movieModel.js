@@ -35,6 +35,10 @@ MovieSchema.statics.findByMovieDBId = function (id) {
   return this.findOne({ id: id });
 };
 
+MovieSchema.statics.searchMovies = function (query) {
+  return this.find({ $text: { $search: query } });
+};
+
 export default mongoose.model('Movies', MovieSchema);
 
 

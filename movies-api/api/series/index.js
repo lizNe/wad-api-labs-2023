@@ -1,33 +1,28 @@
 // tvSeries/index.js
-import tvSeriesModel from './tvSeriesModel';
+import serieModel from './serieModel';
 import asyncHandler from 'express-async-handler';
 import express from 'express';
 import { getPopularTVShows } from '../tmdb-api';
 
 const router = express.Router();
 
+// Get all TV series
 router.get('/', asyncHandler(async (req, res) => {
-  let { page = 1, limit = 10 } = req.query;
-  [page, limit] = [+page, +limit];
-
-  const [total_results, results] = await Promise.all([
-    tvSeriesModel.estimatedDocumentCount(),
-    tvSeriesModel.find().limit(limit).skip((page - 1) * limit)
-  ]);
-  const total_pages = Math.ceil(total_results / limit);
+  const tvSeries = await serieModel.find();
+  const total_results = tvSeries.length;
 
   const returnObject = {
-    page,
-    total_pages,
     total_results,
-    results
+    tvSeries
   };
+
   res.status(200).json(returnObject);
 }));
 
+// Get TV series details by ID
 router.get('/:id', asyncHandler(async (req, res) => {
   const id = parseInt(req.params.id);
-  const tvSeries = await tvSeriesModel.findByTVSeriesDBId(id);
+  const tvSeries = await serieModel.findByTVSeriesDBId(id);
   if (tvSeries) {
     res.status(200).json(tvSeries);
   } else {
@@ -35,12 +30,10 @@ router.get('/:id', asyncHandler(async (req, res) => {
   }
 }));
 
+// Get popular TV series from TMDB
 router.get('/tmdb/popular', asyncHandler(async (req, res) => {
-  let { page = 1 } = req.query;
-  page = +page;
-
   try {
-    const popularTVShows = await getPopularTVShows(page);
+    const popularTVShows = await getPopularTVShows();
     res.status(200).json(popularTVShows);
   } catch (error) {
     res.status(500).json({ success: false, msg: 'Internal server error.' });

@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
-const TVSeriesSchema = new Schema({
+const SerieSchema = new Schema({
   backdrop_path: { type: String },
   first_air_date: { type: String },
   genre_ids: [{ type: Number }],
@@ -19,8 +19,8 @@ const TVSeriesSchema = new Schema({
   vote_count: { type: Number },
 });
 
-TVSeriesSchema.statics.findByTVSeriesDBId = function (id) {
+SerieSchema.statics.findByTVSeriesDBId = function (id) {
   return this.findOne({ id: id });
 };
 
-export default mongoose.model('TVSeries', TVSeriesSchema);
+export default mongoose.model('Series', SerieSchema);
