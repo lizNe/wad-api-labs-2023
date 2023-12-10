@@ -1,8 +1,6 @@
 const series = [
-    {
-        "page": 1,
-        "results": [
           {
+            "adult": false,
             "backdrop_path": "/jWXrQstj7p3Wl5MfYWY6IHqRpDb.jpg",
             "first_air_date": "1952-12-26",
             "genre_ids": [
@@ -393,10 +391,8 @@ const series = [
             "vote_average": 4.3,
             "vote_count": 8
           }
-        ],
-        "total_pages": 8018,
-        "total_results": 160341
-      }
+      
+      
   ];
   
   export default series;

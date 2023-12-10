@@ -3,9 +3,10 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
+
 const SerieSchema = new Schema({
   backdrop_path: { type: String },
-  first_air_date: { type: String },
+  first_air_date: { type: String }, 
   genre_ids: [{ type: Number }],
   id: { type: Number, required: true, unique: true },
   name: { type: String },
