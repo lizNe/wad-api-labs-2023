@@ -10,6 +10,7 @@ import Serie from '../api/series/serieModel';
 import Actor from '../api/actors/actorModel';
 import actors from './actors';
 
+
 async function main() {
     if (process.env.NODE_ENV !== 'development') {
         console.log('This script is only for the development environment.');

@@ -1,189 +1,138 @@
 import fetch from 'node-fetch';
 
 export const getUpcomingMovies = async () => {
-    try {
-        const response = await fetch(
-            `https://api.themoviedb.org/3/movie/upcoming?api_key=${process.env.TMDB_KEY}&language=en-US&page=1`
-        );
+    const response = await fetch(
+        `https://api.themoviedb.org/3/movie/upcoming?api_key=${process.env.TMDB_KEY}&language=en-US&page=1`
+    );
 
-        if (!response.ok) {
-            throw new Error(response.json().message);
-        }
+    if (!response.ok) {
+        throw new Error(response.json().message);
+    }
 
-        return await response.json();
-    } catch (error) {
-        throw error;
-    }   
+    return response.json();
 };
 
 export const getTMDBGenres = async () => {
-    try {
-      const response = await fetch(
+    const response = await fetch(
         `https://api.themoviedb.org/3/genre/movie/list?api_key=${process.env.TMDB_KEY}`
-      );
-  
-      if (!response.ok) {
+    );
+
+    if (!response.ok) {
         throw new Error(response.json().message);
-      }
-  
-      return await response.json();
-    } catch (error) {
-      throw error;
     }
-  };
+
+    return response.json();
+};
 
 /////////////////////////////////////////////////////
 
 export const getPopularTVShows = async () => {
-  try {
     const response = await fetch(
-      `https://api.themoviedb.org/3/tv/popular?api_key=${process.env.TMDB_KEY}&language=en-US&page=1`
+        `https://api.themoviedb.org/3/tv/popular?api_key=${process.env.TMDB_KEY}&language=en-US&page=1`
     );
 
     if (!response.ok) {
-      throw new Error("Failed to fetch popular TV shows.");
+        throw new Error("Failed to fetch popular TV shows.");
     }
 
     return response.json();
-  } catch (error) {
-    throw error;
-  }
 };
 
 // tmdb-api/index.js
 export const getSeriesDetails = async (seriesId) => {
-  try {
     const response = await fetch(
-      `https://api.themoviedb.org/3/tv/${seriesId}?api_key=${process.env.TMDB_KEY}&language=en-US`
+        `https://api.themoviedb.org/3/tv/${seriesId}?api_key=${process.env.TMDB_KEY}&language=en-US`
     );
 
     if (!response.ok) {
-      throw new Error("Failed to fetch TV series details.");
+        throw new Error("Failed to fetch TV series details.");
     }
 
     return response.json();
-  } catch (error) {
-    throw error;
-  }
 };
 
+export const getTopRatedMovies = async () => {
+    const response = await fetch(
+        `https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.TMDB_KEY}&language=en-US&page=1`
+    );
 
-
-export const getTopRatedMovies = async ( ) => {
-    try {
-        const response = await fetch(
-            `https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.TMDB_KEY}&language=en-US&page=1`
-        );
-  
-        if (!response.ok) {
-            throw new Error("Failed to fetch top rated movies.");
-        }
-  
-        return response.json();
-    } catch (error) {
-        throw error;
+    if (!response.ok) {
+        throw new Error("Failed to fetch top-rated movies.");
     }
-  };
 
+    return response.json();
+};
 
 export const getNowPlayingMovies = async () => {
-  try {
-      const response = await fetch(
-          `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.TMDB_KEY}&language=en-US&page=1`
-      );
+    const response = await fetch(
+        `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.TMDB_KEY}&language=en-US&page=1`
+    );
 
-      if (!response.ok) {
-          throw new Error("Failed to fetch now playing movies.");
-      }
+    if (!response.ok) {
+        throw new Error("Failed to fetch now playing movies.");
+    }
 
-      return response.json();
-  } catch (error) {
-      throw error;
-  }
+    return response.json();
 };
 
 export const getMovieDetails = async (movieId) => {
-  try {
-      const response = await fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.TMDB_KEY}&language=en-US`
-      );
+    const response = await fetch(
+        `https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.TMDB_KEY}&language=en-US`
+    );
 
-      if (!response.ok) {
-          throw new Error("Failed to fetch movie details.");
-      }
+    if (!response.ok) {
+        throw new Error("Failed to fetch movie details.");
+    }
 
-      return response.json();
-  } catch (error) {
-      throw error;
-  }
+    return response.json();
 };
 
 export const searchMovies = async (query) => {
-  try {
-      const response = await fetch(
-          `https://api.themoviedb.org/3/search/movie?api_key=${process.env.TMDB_KEY}&language=en-US&query=${query}&page=1`
-      );
-
-      if (!response.ok) {
-          throw new Error("Failed to fetch search results.");
-      }
-
-      return response.json();
-  } catch (error) {
-      throw error;
-  }
-};
-
-  ////////////////////////////////////////////////////////////////////////////
-
-export const getPopularPeople = async () => {
-  try {
     const response = await fetch(
-      `https://api.themoviedb.org/3/person/popular?api_key=${process.env.TMDB_KEY}&language=en-US&page=1}`
+        `https://api.themoviedb.org/3/search/movie?api_key=${process.env.TMDB_KEY}&language=en-US&query=${query}&page=1`
     );
 
     if (!response.ok) {
-      throw new Error("Failed to fetch popular people.");
+        throw new Error("Failed to fetch search results.");
     }
 
     return response.json();
-  } catch (error) {
-    throw error;
-  }
+};
+
+///////////////////////////////////////////////////////////////////////////
+
+export const getPopularPeople = async () => {
+    const response = await fetch(
+        `https://api.themoviedb.org/3/person/popular?api_key=${process.env.TMDB_KEY}&language=en-US&page=1}`
+    );
+
+    if (!response.ok) {
+        throw new Error("Failed to fetch popular people.");
+    }
+
+    return response.json();
 };
 
 export const getPersonDetails = async (personId) => {
-  try {
     const response = await fetch(
-      `https://api.themoviedb.org/3/person/${personId}?api_key=${process.env.TMDB_KEY}&language=en-US`
+        `https://api.themoviedb.org/3/person/${personId}?api_key=${process.env.TMDB_KEY}&language=en-US`
     );
 
     if (!response.ok) {
-      throw new Error("Failed to fetch person details.");
+        throw new Error("Failed to fetch person details.");
     }
 
     return response.json();
-  } catch (error) {
-    throw error;
-  }
 };
-
 
 export const getPersonMovieCredits = async (personId) => {
-  try {
     const response = await fetch(
-      `https://api.themoviedb.org/3/person/${personId}/movie_credits?api_key=${process.env.TMDB_KEY}&language=en-US`
+        `https://api.themoviedb.org/3/person/${personId}/movie_credits?api_key=${process.env.TMDB_KEY}&language=en-US`
     );
 
     if (!response.ok) {
-      throw new Error("Failed to fetch person movie credits.");
+        throw new Error("Failed to fetch person movie credits.");
     }
 
     return response.json();
-  } catch (error) {
-    throw error;
-  }
 };
-
-
-
